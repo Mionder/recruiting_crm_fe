@@ -90,7 +90,7 @@ export default function CandidateForm() {
 
       const token = localStorage.getItem('token');
 
-      const response = await fetch('http://localhost:3001/candidates/register', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/candidates/register`, {
         method: 'POST',
         headers: {
           // Content-Type НЕ СТАВИМО, браузер сам поставить boundary для FormData

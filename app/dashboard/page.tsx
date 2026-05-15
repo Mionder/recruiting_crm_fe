@@ -27,7 +27,7 @@ export default function Dashboard() {
   const fetchCandidates = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/candidates', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/candidates`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();

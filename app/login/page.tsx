@@ -3,6 +3,9 @@
 import React, { useState } from 'react';
 import { Lock, User, Shield, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { setCookie } from 'cookies-next';
+import Image from 'next/image';
+import Logo from '../img/logo_icon_192.png';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,7 +22,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const response = await fetch('http://localhost:3001/auth/login', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,6 +38,7 @@ export default function LoginPage() {
 
       // Зберігаємо токен
       localStorage.setItem('token', data.access_token);
+      setCookie('token', data.access_token, { maxAge: 60 * 60 * 48 });
       
       // Редирект на головну (список кандидатів або форму)
       router.push('/dashboard');
@@ -51,9 +55,9 @@ export default function LoginPage() {
       <div className="w-full max-w-sm mx-auto space-y-8">
         <div className="text-center">
           <div className="inline-flex p-4 rounded-2xl bg-white/5 border border-white/10 mb-4">
-            <Shield className="w-12 h-12 text-white" />
+            <Image src={Logo} alt="logo" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">RECRUIT CRM</h1>
+          <h1 className="text-2xl font-bold tracking-tight">RECRUITING CRM</h1>
           <p className="text-white/50 text-sm mt-2">Вхід у систему керування</p>
         </div>
 
