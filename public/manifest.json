@@ -1,0 +1,22 @@
+{
+  "name": "Army Recruiting CRM",
+  "short_name": "RecruitCRM",
+  "description": "Система управління кандидатами",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#232323",
+  "theme_color": "#232323",
+  "icons": [
+    {
+      "src": "/icons/logo_icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/logo_icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
