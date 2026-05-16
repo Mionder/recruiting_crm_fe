@@ -66,7 +66,7 @@ export default function Dashboard() {
             <p className="text-white/40 text-sm">Всього: {candidates.length}</p>
           </div>
           <button 
-            onClick={() => router.push('/candidates/new')}
+            onClick={() => router.push('/form')}
             className="bg-white text-[#232323] p-3 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-lg"
           >
             <Plus className="w-6 h-6" />
@@ -293,7 +293,7 @@ export default function Dashboard() {
       {/* Floating Action Button */}
       <div className="fixed bottom-8 left-0 right-0 px-6 pointer-events-none">
         <button 
-          onClick={() => router.push('/candidates/new')}
+          onClick={() => router.push('/form')}
           className="w-full bg-white text-[#232323] font-bold py-4 rounded-2xl shadow-2xl pointer-events-auto active:scale-[0.98] transition-all flex items-center justify-center gap-2"
         >
           <Plus className="w-5 h-5" />
