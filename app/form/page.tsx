@@ -115,8 +115,8 @@ export default function CandidateForm() {
     return (
       <div className="min-h-screen bg-[#232323] flex items-center justify-center p-6 text-center">
         <div className="space-y-4 animate-in zoom-in duration-300">
-          <CheckCircle2 className="w-20 h-20 text-green-500 mx-auto" />
-          <h2 className="text-2xl font-bold">Анкету збережено!</h2>
+          <CheckCircle2 className="w-20 h-20 text-white-500 mx-auto" />
+          <h2 className="text-2xl text-white font-bold">Анкету збережено!</h2>
           <p className="text-white/50">Дані успішно передані в систему.</p>
         </div>
       </div>
