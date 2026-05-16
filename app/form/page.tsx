@@ -342,7 +342,7 @@ export default function CandidateForm() {
 
         <button 
           type="submit"
-          className="w-full bg-white text-[#232323] font-bold py-5 rounded-2xl shadow-xl active:scale-95 transition-all uppercase tracking-widest"
+          className="w-full flex items-center justify-center bg-white text-[#232323] font-bold py-5 rounded-2xl shadow-xl active:scale-95 transition-all uppercase tracking-widest"
           disabled={isSubmitting}
         >
             {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : "Зберегти анкету"}
