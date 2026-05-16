@@ -83,24 +83,6 @@ export default function CandidateForm() {
     }));
   };
 
-  const shareToWhatsApp = (candidate: any) => {
-  const phoneNumber = "380676192551"; // Номер, куди відправляти (без +)
-  
-  const text = `*Новий кандидат у CRM!* 🚀\n\n` +
-               `👤 *ПІБ:* ${candidate.fullName}\n` +
-               `📞 *Телефон:* ${candidate.phone}\n` +
-               `📍 *Адреса:* ${candidate.address}\n` +
-               `🪪 *ІПН:* ${candidate.ipn}\n` +
-               `🚗 *Категорії:* ${candidate.categories}\n` +
-               `🏥 *Здоров'я:* ${candidate.healthIssues || 'Без скарг'}\n` +
-               `⚖️ *Судимість:* ${candidate.hasCriminal ? 'Є (' + candidate.criminalDetails + ')' : 'Відсутня'}\n` +
-               `📄 *ВЛК:* ${candidate.vlkUrl || 'Не завантажено'}`;
-
-  // Кодуємо текст для URL
-  const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
-  window.open(url, '_blank');
-};
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
