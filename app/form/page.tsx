@@ -117,7 +117,6 @@ export default function CandidateForm() {
       if (!response.ok) throw new Error('Помилка при збереженні');
 
       setIsSuccess(true);
-      shareToWhatsApp(data);
       setTimeout(() => router.push('/dashboard'), 2000);
 
     } catch (error) {
@@ -337,7 +336,7 @@ export default function CandidateForm() {
           <textarea 
             placeholder="Коментарі" 
             className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 h-24 outline-none focus:border-white/30"
-            onChange={(e) => setFormData({...formData, comments: e.target.value})}
+            onChange={(e) => setFormData({...formData, summary: e.target.value})}
           />
         </section>
 
