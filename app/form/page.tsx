@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Camera, Upload, Calendar, Loader2, CheckCircle2 } from 'lucide-react';
+import { Camera, Upload, Calendar, Loader2, CheckCircle2, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function CandidateForm() {
@@ -59,6 +59,21 @@ export default function CandidateForm() {
     }
   };
 
+  const handleClearFile = (e: React.MouseEvent, type: 'photo' | 'vlk') => {
+    e.preventDefault(); // Зупиняємо клік, щоб знову не відкривався інпут
+    e.stopPropagation();
+    
+    // Звільняємо пам'ять від створеного URL
+    if (files[type].preview) {
+      URL.revokeObjectURL(files[type].preview);
+    }
+
+    setFiles(prev => ({
+      ...prev,
+      [type]: { file: null, preview: '' }
+    }));
+  };
+
   const toggleCategory = (cat: string) => {
     setFormData(prev => ({
       ...prev,
@@ -67,6 +82,24 @@ export default function CandidateForm() {
         : [...prev.categories, cat]
     }));
   };
+
+  const shareToWhatsApp = (candidate: any) => {
+  const phoneNumber = "380676192551"; // Номер, куди відправляти (без +)
+  
+  const text = `*Новий кандидат у CRM!* 🚀\n\n` +
+               `👤 *ПІБ:* ${candidate.fullName}\n` +
+               `📞 *Телефон:* ${candidate.phone}\n` +
+               `📍 *Адреса:* ${candidate.address}\n` +
+               `🪪 *ІПН:* ${candidate.ipn}\n` +
+               `🚗 *Категорії:* ${candidate.categories}\n` +
+               `🏥 *Здоров'я:* ${candidate.healthIssues || 'Без скарг'}\n` +
+               `⚖️ *Судимість:* ${candidate.hasCriminal ? 'Є (' + candidate.criminalDetails + ')' : 'Відсутня'}\n` +
+               `📄 *ВЛК:* ${candidate.vlkUrl || 'Не завантажено'}`;
+
+  // Кодуємо текст для URL
+  const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,6 +135,7 @@ export default function CandidateForm() {
       if (!response.ok) throw new Error('Помилка при збереженні');
 
       setIsSuccess(true);
+      shareToWhatsApp(data);
       setTimeout(() => router.push('/dashboard'), 2000);
 
     } catch (error) {
@@ -245,55 +279,78 @@ export default function CandidateForm() {
         <section className="space-y-4">
           <h2 className="text-xs uppercase tracking-widest text-white/40 font-bold">Документи та Фото</h2>
           
-            <div className="grid grid-cols-2 gap-4">
-            {/* Фото людини */}
-            <label className="relative flex flex-col items-center justify-center p-0 overflow-hidden bg-white/5 border border-dashed border-white/10 rounded-2xl hover:bg-white/10 transition-all cursor-pointer h-32">
-                {files.photo.preview ? (
-                <>
-                    <img src={files.photo.preview} alt="User" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                    <Camera className="w-6 h-6 text-white" />
-                    </div>
-                </>
-                ) : (
-                <>
-                    <Camera className="w-8 h-8 mb-2 text-white/40" />
-                    <span className="text-[10px] uppercase font-bold text-white/40 text-center px-2">Фото кандидата</span>
-                </>
-                )}
-                <input 
-                type="file" 
-                accept="image/*" 
-                capture="user" 
-                className="hidden" 
-                onChange={(e) => handleFileChange(e, 'photo')}
-                />
-            </label>
+<div className="grid grid-cols-2 gap-4">
+  {/* Фото людини */}
+  <label className="relative flex flex-col items-center justify-center p-0 overflow-hidden bg-white/5 border border-dashed border-white/10 rounded-2xl hover:bg-white/10 transition-all cursor-pointer h-32 group">
+    {files.photo.preview ? (
+      <>
+        <img src={files.photo.preview} alt="User" className="w-full h-full object-cover" />
+        {/* Оверлей при ховері для зміни */}
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <Camera className="w-6 h-6 text-white" />
+        </div>
+        {/* Кнопка видалення */}
+        <button
+          type="button"
+          onClick={(e) => handleClearFile(e, 'photo')}
+          className="absolute top-2 right-2 p-1.5 bg-black/60 hover:bg-black/80 rounded-full text-white/80 hover:text-white transition-colors z-10"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+      </>
+    ) : (
+      <>
+        <Camera className="w-8 h-8 mb-2 text-white/40" />
+        <span className="text-[10px] uppercase font-bold text-white/40 text-center px-2">Фото кандидата</span>
+        <span className="text-[8px] text-white/20 mt-0.5">Камера або галерея</span>
+      </>
+    )}
+    <input 
+      type="file" 
+      maxLength={1}
+      accept="image/*" 
+      /* ВИДАЛЕНО capture="user" — тепер при кліку телефон сам запитає: Камера чи Галерея */
+      className="hidden" 
+      onChange={(e) => handleFileChange(e, 'photo')}
+    />
+  </label>
 
-            {/* ВЛК */}
-            <label className="relative flex flex-col items-center justify-center p-0 overflow-hidden bg-white/5 border border-dashed border-white/10 rounded-2xl hover:bg-white/10 transition-all cursor-pointer h-32">
-                {files.vlk.preview ? (
-                <>
-                    <img src={files.vlk.preview} alt="VLK" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                    <Upload className="w-6 h-6 text-white" />
-                    </div>
-                </>
-                ) : (
-                <>
-                    <Upload className="w-8 h-8 mb-2 text-white/40" />
-                    <span className="text-[10px] uppercase font-bold text-white/40 text-center px-2">Довідка ВЛК</span>
-                </>
-                )}
-                <input 
-                type="file" 
-                accept="image/*" 
-                capture="environment" 
-                className="hidden" 
-                onChange={(e) => handleFileChange(e, 'vlk')}
-                />
-            </label>
-            </div>
+  {/* ВЛК */}
+  <label className="relative flex flex-col items-center justify-center p-0 overflow-hidden bg-white/5 border border-dashed border-white/10 rounded-2xl hover:bg-white/10 transition-all cursor-pointer h-32 group">
+    {files.vlk.preview ? (
+      <>
+        <img src={files.vlk.preview} alt="VLK" className="w-full h-full object-cover" />
+        {/* Оверлей при ховері для зміни */}
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <Upload className="w-6 h-6 text-white" />
+        </div>
+        {/* Кнопка видалення */}
+        <button
+          type="button"
+          onClick={(e) => handleClearFile(e, 'vlk')}
+          className="absolute top-2 right-2 p-1.5 bg-black/60 hover:bg-black/80 rounded-full text-white/80 hover:text-white transition-colors z-10"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+      </>
+    ) : (
+      <>
+        <Upload className="w-8 h-8 mb-2 text-white/40" />
+        <span className="text-[10px] uppercase font-bold text-white/40 text-center px-2">Довідка ВЛК</span>
+        <span className="text-[8px] text-white/20 mt-0.5">Скан або файл</span>
+      </>
+    )}
+    <input 
+      type="file" 
+      maxLength={1}
+      /* Для ВЛК можна розширити accept, якщо рекрутери захочуть прикріпити PDF документ */
+      accept="image/*,application/pdf" 
+      /* ВИДАЛЕНО capture="environment" */
+      className="hidden" 
+      onChange={(e) => handleFileChange(e, 'vlk')}
+    />
+  </label>
+</div>
 
           <textarea 
             placeholder="Коментарі" 
